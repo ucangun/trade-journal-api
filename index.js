@@ -58,6 +58,11 @@ app.all("/", (req, res) => {
 
 /* ------------------------------------------------- */
 
+// errorHandler:
+app.use(require("./src/middlewares/errorHandler"));
+
+/* ------------------------------------------------- */
+
 // RUN SERVER:
 app.listen(PORT, () => {
   console.log(`Server running on http://${HOST}:${PORT}`);
