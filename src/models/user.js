@@ -43,7 +43,19 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, "Last name is required"],
     },
+
+    totalCapital: {
+      type: Number,
+      default: 0,
+      validate: {
+        validator: function (value) {
+          return value >= 0;
+        },
+        message: "Total capital cannot be negative",
+      },
+    },
   },
+
   { collection: "users", timestamps: true }
 );
 
