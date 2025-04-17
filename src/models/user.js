@@ -49,7 +49,7 @@ const userSchema = new mongoose.Schema(
       default: 0,
       validate: {
         validator: function (value) {
-          return value >= 0;
+          return validator.isFloat(value.toString(), { min: 0 });
         },
         message: "Total capital cannot be negative",
       },
