@@ -7,7 +7,7 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
 
-const StockSchema = new mongoose.Schema(
+const stockSchema = new mongoose.Schema(
   {
     userId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -95,8 +95,8 @@ const StockSchema = new mongoose.Schema(
 );
 
 // Calculate total value (virtual field)
-StockSchema.virtual("currentValue").get(function () {
+stockSchema.virtual("currentValue").get(function () {
   return this.currentQuantity * this.averagePrice;
 });
 
-module.exports = mongoose.model("Stock", StockSchema);
+module.exports = mongoose.model("Stock", stockSchema);
