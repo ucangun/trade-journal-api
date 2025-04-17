@@ -49,8 +49,6 @@ app.use(require("./src/middlewares/queryHandler"));
 
 /* ------------------------------------------------- */
 
-// Routes:
-
 // HomePath:
 app.all("/", (req, res) => {
   res.send({
@@ -58,6 +56,9 @@ app.all("/", (req, res) => {
     message: "Welcome to Trade Journal Api",
   });
 });
+
+// Routes:
+app.use(require("./src/routes/index"));
 
 /* ------------------------------------------------- */
 
