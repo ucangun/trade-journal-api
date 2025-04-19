@@ -7,7 +7,7 @@
 // CapitalDeposit Controllers:
 
 const CapitalDeposit = require("../models/capitalDeposit");
-const User = require("../models/User");
+const User = require("../models/user");
 const CustomError = require("../errors/customError");
 
 module.exports = {
