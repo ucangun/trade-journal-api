@@ -8,17 +8,20 @@ const router = require("express").Router();
 
 /* ------------------------------------------------- */
 
-// Auth:
-router.use("/auth", require("./auth"));
+const {
+  list,
+  create,
+  read,
+  update,
+  deleteTransaction,
+} = require("../controllers/transaction");
 
-// Capital Deposit:
-router.use("/capital-deposits", require("./capitalDeposit"));
+router.get("/", list);
+router.post("/", create);
+router.get("/:id", read);
+router.put("/:id", update);
+router.delete("/:id", deleteTransaction);
 
-// Stock:
-router.use("/stocks", require("./stock"));
+/* ------------------------------------------------- */
 
-// Transaction:
-router.use("/transactions", require("./transaction"));
-
-/* -------------------------------------------- */
 module.exports = router;
