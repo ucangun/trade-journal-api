@@ -1,1 +1,1 @@
-![Trade Journal ERD](https://github.com/user-attachments/assets/d4e49956-b0f5-4725-938c-ab46e2b87cc3)
+![Trade Journal ERD](https://github.com/user-attachments/assets/7e458552-27f2-4908-a3c5-038e04646c9b)
