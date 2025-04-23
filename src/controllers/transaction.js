@@ -9,6 +9,8 @@
 const Transaction = require("../models/transaction");
 const Stock = require("../models/Stock");
 const CustomError = require("../errors/customError");
+const CapitalDeposit = require("../models/capitalDeposit");
+const User = require("../models/user");
 
 module.exports = {
   list: async (req, res) => {
@@ -65,10 +67,39 @@ module.exports = {
       throw new CustomError("Stock not found", 404);
     }
 
-    const transaction = await Transaction.create(req.body);
+    // Get the user to check and update totalCapital
+    const user = await User.findById(req.user._id);
 
-    // Update stock based on transaction type
+    if (!user) {
+      throw new CustomError("User not found", 404);
+    }
+
+    // Calculate transaction total amount
+    const transactionAmount = req.body.quantity * req.body.price;
+
+    // Handle BUY transaction
     if (req.body.transactionType === "BUY") {
+      // Check if user has enough capital
+      if (user.totalCapital < transactionAmount) {
+        throw new CustomError(
+          "Insufficient funds. Please deposit more capital.",
+          400
+        );
+      }
+
+      // Deduct from user's totalCapital
+      user.totalCapital -= transactionAmount;
+      await user.save();
+
+      // Create a capital deposit record for tracking
+      await CapitalDeposit.create({
+        userId: req.user._id,
+        amount: transactionAmount,
+        description: `Withdrawal for purchase of ${req.body.quantity} shares of ${stock.symbol} at ${req.body.price}`,
+        type: "withdrawal",
+        date: new Date(),
+      });
+
       // Calculate new average price and quantity for BUY
       const oldValue = stock.currentQuantity * stock.averagePrice;
       const newValue = req.body.quantity * req.body.price;
@@ -81,11 +112,26 @@ module.exports = {
       stock.averagePrice = newAveragePrice;
       stock.isOpen = true;
       stock.closeDate = null;
-    } else if (req.body.transactionType === "SELL") {
+    }
+    // Handle SELL transaction
+    else if (req.body.transactionType === "SELL") {
       // Check if there's enough quantity to sell
       if (stock.currentQuantity < req.body.quantity) {
         throw new CustomError("Not enough quantity to sell", 400);
       }
+
+      // Add to user's totalCapital
+      user.totalCapital += transactionAmount;
+      await user.save();
+
+      // Create a capital deposit record for tracking
+      await CapitalDeposit.create({
+        userId: req.user._id,
+        amount: transactionAmount,
+        description: `Deposit from sale of ${req.body.quantity} shares of ${stock.symbol} at ${req.body.price}`,
+        type: "deposit",
+        date: new Date(),
+      });
 
       // Calculate profit/loss for this transaction
       const transactionProfitLoss =
@@ -114,12 +160,19 @@ module.exports = {
     // Save the updated stock
     await stock.save();
 
+    // Create the transaction
+    const transaction = await Transaction.create({
+      ...req.body,
+      userId: req.user._id,
+    });
+
     res.status(201).send({
       error: false,
       message: "Transaction created successfully",
       body: req.body,
       data: transaction,
       updatedStock: stock,
+      totalCapital: user.totalCapital,
     });
   },
 
