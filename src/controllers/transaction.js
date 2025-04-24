@@ -7,7 +7,7 @@
 // Transaction Controllers:
 
 const Transaction = require("../models/transaction");
-const Stock = require("../models/Stock");
+const Stock = require("../models/stock");
 const CustomError = require("../errors/customError");
 const CapitalDeposit = require("../models/capitalDeposit");
 const User = require("../models/user");

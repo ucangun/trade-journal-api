@@ -6,7 +6,7 @@
 
 // Stock Controllers:
 
-const Stock = require("../models/Stock");
+const Stock = require("../models/stock");
 const CustomError = require("../errors/customError");
 
 module.exports = {
