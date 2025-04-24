@@ -151,4 +151,24 @@ module.exports = {
       data,
     });
   },
+
+  listClose: async (req, res) => {
+    /* 
+            #swagger.tags = ["Stock"]
+            #swagger.summary = "List Closed Stocks"
+            #swagger.description = "List all closed stock positions for the authenticated user"
+        */
+
+    // Only show closed stocks for the authenticated user
+    const customFilter = { userId: req.user._id, isOpen: false };
+
+    const data = await res.getModelList(Stock, customFilter);
+
+    res.status(200).send({
+      error: false,
+      message: "Closed stocks listed successfully",
+      details: await res.getModelListDetails(Stock, customFilter),
+      data,
+    });
+  },
 };
