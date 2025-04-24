@@ -16,6 +16,7 @@ const {
   deleteStock,
   listOpen,
   listClose,
+  updateNotes,
 } = require("../controllers/stock");
 
 router.get("/", list);
@@ -26,6 +27,7 @@ router.get("/close", listClose);
 router.get("/:id", read);
 router.put("/:id", update);
 router.delete("/:id", deleteStock);
+router.put("/:id/notes", updateNotes);
 
 /* ------------------------------------------------- */
 

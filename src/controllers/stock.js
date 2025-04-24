@@ -171,4 +171,41 @@ module.exports = {
       data,
     });
   },
+
+  updateNotes: async (req, res) => {
+    /* 
+        #swagger.tags = ["Stock"]
+        #swagger.summary = "Update Stock Notes"
+        #swagger.description = "Update only the notes field of a stock"
+        #swagger.parameters['body'] = {
+            in: 'body',
+            required: true,
+            schema: {
+                notes: "String"
+            }
+        }
+    */
+
+    if (!req.body.notes && req.body.notes !== "") {
+      throw new CustomError("Notes field is required", 400);
+    }
+
+    // Update only the notes field
+    const data = await Stock.updateOne(
+      { _id: req.params.id, userId: req.user._id },
+      { notes: req.body.notes },
+      { runValidators: true }
+    );
+
+    if (data.matchedCount === 0) {
+      throw new CustomError("Stock not found", 404);
+    }
+
+    res.status(200).send({
+      error: false,
+      message: "Stock notes updated successfully",
+      data,
+      new: await Stock.findOne({ _id: req.params.id }),
+    });
+  },
 };
