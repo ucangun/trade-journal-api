@@ -50,12 +50,6 @@ const transactionSchema = new mongoose.Schema(
     transactionDate: {
       type: Date,
       default: Date.now,
-      validate: {
-        validator: function (value) {
-          return validator.isDate(value) && value <= new Date();
-        },
-        message: "Transaction date cannot be in the future",
-      },
     },
     comment: {
       type: String,

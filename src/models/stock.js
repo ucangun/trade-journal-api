@@ -55,12 +55,6 @@ const stockSchema = new mongoose.Schema(
     openDate: {
       type: Date,
       default: Date.now,
-      validate: {
-        validator: function (value) {
-          return validator.isDate(value) && value <= new Date();
-        },
-        message: "Open date cannot be in the future",
-      },
     },
     closeDate: {
       type: Date,

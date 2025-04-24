@@ -27,12 +27,6 @@ const capitalDepositSchema = new mongoose.Schema(
     date: {
       type: Date,
       default: Date.now,
-      validate: {
-        validator: function (value) {
-          return validator.isDate(value) && value <= new Date();
-        },
-        message: "Date cannot be in the future",
-      },
     },
     description: {
       type: String,
